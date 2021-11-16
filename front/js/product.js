@@ -35,21 +35,34 @@ function getOneArticle() {
 }
 
 function addProductToCart() {
-  // select a product from the page and add it to the cart with button addeventlistener
-  const idProduct = getUrlSearchParams();
-  const btnAddToCart = document.querySelector("#addToCart");
-  btnAddToCart.addEventListener("click", (event) => {
-    event.preventDefault();
-    let detailsProduct = {
-      id: idProduct,
+  // select a product from the page and add it to the cart with button addeventlistener and localstorage
+  const addToCart = document.querySelector("#addToCart");
+  addToCart.addEventListener("click", () => {
+    let idBasket = 0;
+    const product = {
+      idBasket: idBasket,
+      idProduct: getUrlSearchParams(),
+      name: document.querySelector("#title").innerHTML,
+      price: document.querySelector("#price").innerHTML,
+      colors: document.querySelector("#colors").value,
       quantity: document.querySelector("#quantity").value,
-      color: document.querySelector("#colors").value,
-      nameProduct: document.querySelector("#title").innerHTML,
-      priceProduct: document.querySelector("#price").innerHTML,
-      descriptionProduct: document.querySelector("#description").innerHTML,
     };
-    localStorage.setItem("detailsProduct", JSON.stringify(detailsProduct));
-    console.log(detailsProduct);
+    let products = localStorage.getItem("cart");
+    let productArray = [];
+    if (products != null) {
+      // If the cart isn't empty, it will push in the existing array
+    } else {
+      productArray.push(product);
+    }
+
+    let test = JSON.parse(localStorage.getItem("cart"));
+    console.log(test);
+    if (product.idProduct) {
+      alert("trouvé");
+    } else {
+      alert("non trouvé");
+    }
+    localStorage.setItem("cart", JSON.stringify(productArray));
   });
 }
 addProductToCart();
