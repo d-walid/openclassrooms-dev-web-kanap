@@ -16,13 +16,14 @@ function getOneArticle() {
     .then((product) => {
       const title = document.querySelector("#title");
       const description = document.querySelector("#description");
-      const productImg = document.createElement("img");
-      const img = document.querySelector(".item__img").appendChild(productImg);
       const price = document.querySelector("#price");
+
+      let productImg = document.createElement("img");
+      document.querySelector(".item__img").appendChild(productImg);
+      productImg.src = product.imageUrl;
 
       title.innerHTML = product.name;
       description.innerHTML = product.description;
-      img.src = product.imageUrl;
       price.innerHTML = product.price;
 
       for (colors of product.colors) {
@@ -46,7 +47,9 @@ function addProductToCart() {
       price: document.querySelector("#price").innerHTML,
       colors: document.querySelector("#colors").value,
       quantity: document.querySelector("#quantity").value,
+      imgProduct: document.querySelector(".item__img").src,
     };
+    console.log(product);
 
     let products = JSON.parse(localStorage.getItem("cart"));
     if (products) {
@@ -61,17 +64,30 @@ function addProductToCart() {
           parseInt(isProductInTheCart.quantity) + parseInt(product.quantity);
         isProductInTheCart.quantity = newQuantity;
         localStorage.setItem("cart", JSON.stringify(products));
+        redirectionToCartPage();
       } else {
         // if the product is not found in the cart, add it to the cart
         products.push(product);
         localStorage.setItem("cart", JSON.stringify(products));
+        redirectionToCartPage();
       }
     } else {
       // if the cart is empty, add the product to the empty cart
       products = [];
       products.push(product);
       localStorage.setItem("cart", JSON.stringify(products));
+      redirectionToCartPage();
     }
   });
+}
+
+function redirectionToCartPage() {
+  if (
+    window.confirm(
+      "Votre produit a été ajouté au panier. Pour en connaître le contenu, cliquez sur 'OK'. Pour continuez vos achats, cliquez sur 'Annuler'"
+    )
+  ) {
+    window.location.href = "cart.html";
+  }
 }
 addProductToCart();
