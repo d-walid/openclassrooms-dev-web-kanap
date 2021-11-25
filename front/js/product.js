@@ -49,7 +49,6 @@ function addProductToCart() {
       quantity: document.querySelector("#quantity").value,
       imgProduct: document.querySelector(".item__img").src,
     };
-    console.log(product);
 
     let products = JSON.parse(localStorage.getItem("cart"));
     if (products) {
