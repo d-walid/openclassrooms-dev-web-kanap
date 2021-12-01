@@ -38,44 +38,53 @@ function getOneArticle() {
 function addProductToCart() {
   // select a product from the page and add it to the cart with button addeventlistener and localstorage
   const addToCart = document.querySelector("#addToCart");
-  addToCart.addEventListener("click", () => {
-    let idBasket = 0;
-    let product = {
-      idBasket: idBasket,
-      idProduct: getUrlSearchParams(),
-      name: document.querySelector("#title").innerHTML,
-      price: document.querySelector("#price").innerHTML,
-      colors: document.querySelector("#colors").value,
-      quantity: document.querySelector("#quantity").value,
-      imgProduct: document.querySelector(".item__img").src,
-    };
+  const choiceQuantity = document.querySelector("#quantity");
+  addToCart.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (
+      choiceQuantity.value > 0 &&
+      choiceQuantity.value <= 100 &&
+      choiceQuantity.value != 0
+    ) {
+      let idBasket = 0;
+      let product = {
+        idBasket: idBasket,
+        idProduct: getUrlSearchParams(),
+        name: document.querySelector("#title").innerHTML,
+        price: document.querySelector("#price").innerHTML,
+        colors: document.querySelector("#colors").value,
+        quantity: document.querySelector("#quantity").value,
+        imgProduct: document.querySelector(".item__img").src,
+      };
 
-    let products = JSON.parse(localStorage.getItem("cart"));
-    if (products) {
-      // if the product is found in the cart with the same color and idProduct, we add the quantity
-      const isProductInTheCart = products.find(
-        (productInCart) =>
-          productInCart.idProduct === product.idProduct &&
-          productInCart.colors === product.colors
-      );
-      if (isProductInTheCart) {
-        let newQuantity =
-          parseInt(isProductInTheCart.quantity) + parseInt(product.quantity);
-        isProductInTheCart.quantity = newQuantity;
-        localStorage.setItem("cart", JSON.stringify(products));
-        redirectionToCartPage();
+      let products = JSON.parse(localStorage.getItem("cart"));
+
+      if (products) {
+        // if the product is found in the cart with the same color and idProduct, we add the quantity
+        const isProductInTheCart = products.find(
+          (productInCart) =>
+            productInCart.idProduct === product.idProduct &&
+            productInCart.colors === product.colors
+        );
+        if (isProductInTheCart) {
+          let newQuantity =
+            parseInt(isProductInTheCart.quantity) + parseInt(product.quantity);
+          isProductInTheCart.quantity = newQuantity;
+          localStorage.setItem("cart", JSON.stringify(products));
+          redirectionToCartPage();
+        } else {
+          // if the product is not found in the cart, add it to the cart
+          products.push(product);
+          localStorage.setItem("cart", JSON.stringify(products));
+          redirectionToCartPage();
+        }
       } else {
-        // if the product is not found in the cart, add it to the cart
+        // if the cart is empty, add the product to the empty cart
+        products = [];
         products.push(product);
         localStorage.setItem("cart", JSON.stringify(products));
         redirectionToCartPage();
       }
-    } else {
-      // if the cart is empty, add the product to the empty cart
-      products = [];
-      products.push(product);
-      localStorage.setItem("cart", JSON.stringify(products));
-      redirectionToCartPage();
     }
   });
 }
@@ -83,7 +92,7 @@ function addProductToCart() {
 function redirectionToCartPage() {
   if (
     window.confirm(
-      "Votre produit a été ajouté au panier. Pour en connaître le contenu, cliquez sur 'OK'. Pour continuez vos achats, cliquez sur 'Annuler'"
+      "Votre produit a été ajouté au panier. Pour le consulter, cliquez sur OK."
     )
   ) {
     window.location.href = "cart.html";

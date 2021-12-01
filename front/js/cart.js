@@ -3,11 +3,10 @@ let products = JSON.parse(localStorage.getItem("cart"));
 function variablesProduct() {
   productArticle = document.createElement("article");
   productDivImg = document.createElement("div");
-  productImg = document.createElement("img");
 
   // Variables about items div
   productItemContent = document.createElement("div");
-  productItemTitlePrice = document.createElement("div");
+  productItemContentTitlePrice = document.createElement("div");
   productItemContentSettings = document.createElement("div");
   productItemContentSettingsQuantity = document.createElement("div");
   productItemContentSettingsDelete = document.createElement("div");
@@ -24,10 +23,10 @@ function variablesProduct() {
 function appendChildProducts() {
   document.querySelector("#cart__items").appendChild(productArticle);
   productArticle.appendChild(productItemContent);
-  productItemContent.appendChild(productItemTitlePrice);
-  productItemTitlePrice.appendChild(productTitle);
-  productTitle.appendChild(productColor);
-  productItemTitlePrice.appendChild(productPrice);
+  productItemContent.appendChild(productItemContentTitlePrice);
+  productItemContentTitlePrice.appendChild(productTitle);
+  productItemContentSettings.appendChild(productColor);
+  productItemContentTitlePrice.appendChild(productPrice);
 
   // AppendChild about ItemSettings
   productItemContent.appendChild(productItemContentSettings);
@@ -45,11 +44,12 @@ function displayProducts() {
   productArticle.className = "cart__item";
   productArticle.setAttribute("data-id", products[cart].idProduct);
   productItemContent.className = "cart__item__content";
-  productItemTitlePrice.className = "cart__item__content__titlePrice";
+  productItemContentTitlePrice.className = "cart__item__content__titlePrice";
   productTitle.innerHTML = products[cart].name;
-  productColor.innerHTML = products[cart].colors;
   productPrice.innerHTML = products[cart].price + " €";
   productItemContentSettings.className = "cart__item__content__settings";
+  productColor.innerHTML = "Couleur : " + products[cart].colors;
+  productColor.style.fontSize = "16px";
 
   // Insertion about quantity product
   productItemContentSettingsQuantity.className =
@@ -108,6 +108,7 @@ function displayCart() {
   // if the cart is empty, display a message
   if (products === null || products === 0) {
     EmptyCart.innerHTML = "<h2>Votre panier est vide</h2>";
+    document.querySelector("#order").style.display = "none";
   } else {
     // insert the products with the elements of the cart
     for (cart in products) {
@@ -212,15 +213,16 @@ function sendForm() {
 
     function formValidation() {
       if (
-        formFirstName() &&
-        formLastName() &&
-        formAddress() &&
-        formCity() &&
-        formEmail()
+        formFirstName() === true &&
+        formLastName() === true &&
+        formAddress() === true &&
+        formCity() === true &&
+        formEmail() === true
       ) {
         localStorage.setItem("contact", JSON.stringify(contact));
         return true;
       } else {
+        event.preventDefault();
         alert("Merci de remplir correctement le formulaire");
       }
     }
@@ -234,25 +236,30 @@ function sendForm() {
 
     console.log(products);
 
-    const order = {
-      contact,
-      products,
-    };
+    if (formValidation() === true) {
+      const order = {
+        contact,
+        products,
+      };
 
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(order),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        localStorage.clear();
-        localStorage.setItem("orderId", data.orderId);
-        document.location.href = "confirmation.html";
-      });
+      fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          localStorage.clear();
+          localStorage.setItem("orderId", data.orderId);
+          document.location.href = "confirmation.html";
+        })
+        .catch((error) => console.log(error));
+    } else {
+      event.preventDefault();
+    }
   });
 }
 sendForm();
