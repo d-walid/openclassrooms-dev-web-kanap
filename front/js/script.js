@@ -15,7 +15,7 @@ async function displayProducts() {
   // Loop through array articles
   // Creating elements corresponding to each article
   // Assign classes to elements
-  // Append elements to DOM
+
   const products = await getAllProducts();
   products.forEach((product) => {
     const items = document.getElementById("items");
@@ -24,17 +24,20 @@ async function displayProducts() {
     article.classList.add("article");
     img = document.createElement("img");
     img.classList.add("productImage");
+    img.alt = product.altTxt;
     title = document.createElement("h3");
     title.classList.add("productName");
     description = document.createElement("p");
     description.classList.add("productDescription");
 
+    // Append elements to another element
     items.appendChild(anchor);
     anchor.appendChild(article);
     article.appendChild(img);
     article.appendChild(title);
     article.appendChild(description);
 
+    // Assign values from API to elements in DOM
     anchor.href = `product.html?id=${product._id}`;
     img.src = product.imageUrl;
     img.altTxt = product.altTxt;

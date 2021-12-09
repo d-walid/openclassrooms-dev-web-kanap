@@ -21,6 +21,7 @@ function variablesProduct() {
 }
 
 function appendChildProducts() {
+  // With the appendchild, we will move the elements to another.
   document.querySelector("#cart__items").appendChild(productArticle);
   productArticle.appendChild(productItemContent);
   productItemContent.appendChild(productItemContentTitlePrice);
@@ -41,6 +42,8 @@ function displayProducts() {
   variablesProduct();
   appendChildProducts();
 
+  // Assignation of classes from the HTML/CSS
+  // Assignation of the values from products[cart] with innerHTML
   productArticle.className = "cart__item";
   productArticle.setAttribute("data-id", products[cart].idProduct);
   productItemContent.className = "cart__item__content";
@@ -129,6 +132,7 @@ function sendForm() {
     event.preventDefault();
 
     const contact = {
+      // create an object contact with the values given by the user with the form
       firstName: document.getElementById("firstName").value,
       lastName: document.getElementById("lastName").value,
       address: document.getElementById("address").value,
@@ -139,6 +143,7 @@ function sendForm() {
     console.log(contact);
 
     function formFirstName() {
+      // REGEX for the first name and validate the conditions of the imputs
       const validFirstName = contact.firstName;
       let regExpFirstName =
         /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validFirstName);
@@ -153,6 +158,7 @@ function sendForm() {
     }
 
     function formLastName() {
+      // REGEX for the last name and validate the conditions of the imputs
       const validLastName = contact.lastName;
       let regExpLastName =
         /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validLastName);
@@ -167,6 +173,7 @@ function sendForm() {
     }
 
     function formAddress() {
+      // REGEX for the address and validate the conditions of the imputs
       const validAddress = contact.address;
       let regExpAddress =
         /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/.test(
@@ -182,6 +189,7 @@ function sendForm() {
     }
 
     function formCity() {
+      // REGEX for the city and validate the conditions of the imputs
       const validCity = contact.city;
       let regExpCity =
         /^[a-zA-Zàâäéèêëïîôöùûüç]+(?:[- ][a-zA-Zàâäéèêëïîôöùûüç]+)*$/.test(
@@ -197,6 +205,7 @@ function sendForm() {
     }
 
     function formEmail() {
+      // REGEX for email and validate the conditions of the imputs
       const validEmail = contact.email;
       let regExpEmail =
         /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/.test(
@@ -212,6 +221,7 @@ function sendForm() {
     }
 
     function formValidation() {
+      // if the form is correctly filled, it will create a item "contact" in the localStorage
       if (
         formFirstName() === true &&
         formLastName() === true &&
@@ -237,6 +247,7 @@ function sendForm() {
     console.log(products);
 
     if (formValidation() === true) {
+      // Creation of an object order with the informations of "contact" and "products"
       const order = {
         contact,
         products,

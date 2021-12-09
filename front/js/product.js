@@ -10,6 +10,7 @@ function getUrlSearchParams() {
 
 function getOneArticle() {
   // fetch the article with getUrlSearchParams function
+  // Get the values of the products API and store them in variables
   const idProduct = getUrlSearchParams();
   fetch(`http://localhost:3000/api/products/${idProduct}`)
     .then((response) => response.json())
@@ -18,14 +19,18 @@ function getOneArticle() {
       const description = document.querySelector("#description");
       const price = document.querySelector("#price");
 
+      // Set the values of the products img in the page
       let productImg = document.createElement("img");
       document.querySelector(".item__img").appendChild(productImg);
       productImg.src = product.imageUrl;
+      productImg.alt = product.altTxt;
 
+      // Set the title, description and price from the API in the page
       title.innerHTML = product.name;
       description.innerHTML = product.description;
       price.innerHTML = product.price;
 
+      // Set the values of the colors in the page
       for (colors of product.colors) {
         const productColor = document.createElement("option");
         document.querySelector("#colors").appendChild(productColor);
@@ -40,6 +45,7 @@ function addProductToCart() {
   const addToCart = document.querySelector("#addToCart");
   const choiceQuantity = document.querySelector("#quantity");
   addToCart.addEventListener("click", (event) => {
+    // If the quantity are good, it will initialize the function and add the product to the cart
     event.preventDefault();
     if (
       choiceQuantity.value > 0 &&
@@ -48,6 +54,7 @@ function addProductToCart() {
     ) {
       let idBasket = 0;
       let product = {
+        // Assignation of the values of the product in the cart
         idBasket: idBasket,
         idProduct: getUrlSearchParams(),
         name: document.querySelector("#title").innerHTML,
@@ -67,6 +74,7 @@ function addProductToCart() {
             productInCart.colors === product.colors
         );
         if (isProductInTheCart) {
+          // Modify the quantity of a product already in the cart with a new value
           let newQuantity =
             parseInt(isProductInTheCart.quantity) + parseInt(product.quantity);
           isProductInTheCart.quantity = newQuantity;
@@ -90,6 +98,7 @@ function addProductToCart() {
 }
 
 function redirectionToCartPage() {
+  // Create an alert in the page when a product is added to the cart
   if (
     window.confirm(
       "Votre produit a été ajouté au panier. Pour le consulter, cliquez sur OK."
